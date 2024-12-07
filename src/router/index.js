@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory } from vue-router;
-import LoginPage from src/components/LoginPage.vue; // Path to your Login Page
-import CreateAccountPage from src/components/CreateAccountPage.vue; // Path to your Create Account Page
+import { createRouter, createWebHistory } from 'vue-router';
+import LoginPage from "../components/LoginPage.vue"; // Path to your Login Page
+import CreateAccountPage from "../components/CreateAccountPage.vue"; // Path to your Create Account Page
 
 const routes = [
   {
@@ -10,7 +10,7 @@ const routes = [
   },
   {
     path: "/create-account",
-    name: "CreateAccount",
+    name: "CreateAccountPage",
     component: CreateAccountPage, // Create Account Page route
   },
 ];

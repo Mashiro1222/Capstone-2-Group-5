@@ -45,9 +45,7 @@ export default {
   name: "CreateAccountPage",
   data() {
     return {
-      username: "",
-      password: "",
-      repeatPassword: ""
+
     };
   }
 };
