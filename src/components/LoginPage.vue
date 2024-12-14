@@ -1,33 +1,30 @@
 <template>
-  <div class="login-container">
-    <div class="login-box">
-      <h2>
-        WELCOME<br />
-        TO<br />
-        ALLERCHECK
-      </h2>
-      <form>
+  <div class="container">
+    <!-- Left Section -->
+    <div class="left">
+    </div>
+
+    <!-- Right Section -->
+    <div class="right">
+      <div class="login-box">
+        <h1>Welcome To AllerCheck!</h1>
         <div class="input-group">
-          <input
-            type="text"
-            id="username"
-            required
-            v-model="username"
-            placeholder="Username"
-          />
+          <img src="@/assets/user-icon.png" alt="User Icon" />
+          <input type="text" v-model="username" placeholder="Username" />
         </div>
         <div class="input-group">
+          <img src="@/assets/password-icon.png" alt="Password Icon" />
           <input
             type="password"
-            id="password"
-            required
             v-model="password"
             placeholder="Password"
+            @keyup.enter="handleLogin"
           />
         </div>
-        <button type="submit" class="login-button">LOGIN</button>
-      </form>
-      <a href="#" class="create-account-link">CREATE ACCOUNT</a>
+        <button @click="handleLogin">LOGIN</button>
+        <a href="#" @click.prevent="forgotPassword">Forgot Password?</a>
+        <a href="/create-account" class="create-account">Create Account</a>
+      </div>
     </div>
   </div>
 </template>
@@ -38,98 +35,129 @@ export default {
   data() {
     return {
       username: "",
-      password: ""
+      password: "",
     };
-  }
+  },
+  methods: {
+    handleLogin() {
+      // Placeholder login function
+      console.log("Logging in with", this.username, this.password);
+      if (this.username && this.password) {
+        alert(`Welcome, ${this.username}!`);
+      } else {
+        alert("Please enter both username and password.");
+      }
+    },
+    forgotPassword() {
+      // Placeholder forgot password function
+      alert("Forgot password? We'll handle this later.");
+    },
+  },
 };
 </script>
 
 <style scoped>
-/* Container Styles */
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f0f0f0; /* Light gray background */
+/* General Styles */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+body {
+  background: url("@/assets/nature-background.jpg") no-repeat center center/cover;
+  height: 100vh;
+  display: flex;
 }
 
-/* Login Box Styles */
+/* Container Layout */
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  backdrop-filter: blur(5px); /* Subtle blur effect */
+  background: url("@/assets/nature-background.jpg") no-repeat center center/cover;
+}
+
+/* Left Section */
+.left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.left img {
+  width: 120px;
+  opacity: 0.9;
+}
+
+/* Right Section */
+.right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 20px 0 0 20px;
+}
+
+/* Login Box */
 .login-box {
-  background-color: #fff; /* White box for login */
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 350px;
   text-align: center;
-  width: 320px;
-  font-family: "Arial", sans-serif; /* Matching font family */
 }
-
-/* Title Styles */
-.login-box h2 {
-  font-size: 1.5rem; /* Adjusted for better visibility */
-  font-weight: bold;
-  margin-bottom: 30px;
-  color: #333; /* Dark gray for text */
-  letter-spacing: 2px;
-}
-
-.login-box h2 br {
-  display: block;
-  line-height: 0.5rem; /* Adjusts the line spacing between 'WELCOME' and 'TO' */
-}
-
-/* Input Group Styles */
-.input-group {
+.login-box h1 {
   margin-bottom: 20px;
+  font-size: 2rem;
+  color: #333;
+  font-weight: bold;
 }
-
+.input-group {
+  position: relative;
+  margin: 15px 0;
+}
 .input-group input {
   width: 100%;
-  padding: 12px;
+  padding: 12px 12px 12px 40px;
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
   font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #fff; /* White background for inputs */
-  text-align: left; /* Align text to the left */
+  outline: none;
 }
-
-.input-group input::placeholder {
-  color: #aaa; /* Light gray for placeholder */
-  font-weight: normal;
-  letter-spacing: 1px;
+.input-group img {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  opacity: 0.5;
 }
-
-/* Button Styles */
-.login-button {
+button {
   width: 100%;
   padding: 12px;
-  background-color: #333; /* Dark gray button */
+  border: none;
+  border-radius: 25px;
+  background-color: #6c9f3b;
   color: white;
   font-size: 1.1rem;
   font-weight: bold;
-  border: none;
-  border-radius: 5px;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
-
-.login-button:hover {
-  background-color: #555; /* Slightly lighter gray on hover */
+button:hover {
+  background-color: #597d2b;
 }
-
-/* Create Account Link */
-.create-account-link {
+a {
   display: block;
-  margin-top: 20px;
-  font-size: 1rem;
-  font-weight: bold;
+  margin-top: 10px;
+  color: #6c9f3b;
   text-decoration: none;
-  color: #333;
-  letter-spacing: 1px;
+  font-size: 0.9rem;
+}
+a:hover {
+  text-decoration: underline;
 }
 
-.create-account-link:hover {
-  color: #555;
-}
 </style>
