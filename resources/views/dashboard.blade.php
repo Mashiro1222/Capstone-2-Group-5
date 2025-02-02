@@ -166,12 +166,12 @@
 
         .navbar {
             width: 100%;
-            background-color:#1f2937;
+            background-color:#1F2937;
             padding: 10px 20px; /* Reduced padding for smaller screens */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: #fff;
+            color: #bebebe;
             position: fixed; 
             top: 0;
             left: 0;
@@ -180,8 +180,9 @@
         }
 
         .navbar .title {
-            font-size: 20px; /* Adjust font size for mobile */
-            font-size: 20px;
+            font-size: 16px;
+            width: calc(100% - 40px); /* Full width minus the margin */
+            margin: 0 20px; /* Adds 20px margin on the left and right */
             font-weight: bold;
             white-space: nowrap; /* Prevent wrapping */
             overflow: hidden; /* Hide overflowing text */
@@ -194,7 +195,7 @@
 
         .navbar .dropdown-btn {
             background: none;
-            color: #fff;
+            color: #bebebe;
             border: none;
             font-size: 16px;
             cursor: pointer;

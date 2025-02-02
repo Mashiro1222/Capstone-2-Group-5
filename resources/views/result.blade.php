@@ -37,7 +37,7 @@
             border: 1px solid #ddd;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
             padding: 40px; /* Reduced padding for a smaller box */
-            width: 40%; /* Reduced width for better visibility */
+            width: 100%; /* Reduced width for better visibility */
             max-width: 600px; /* Adjusted max-width */
             text-align: center;
             margin-top: 60px;
@@ -121,12 +121,12 @@
 
         .navbar {
             width: 100%;
-            background-color:#1f2937;
+            background-color:#1F2937;
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: #fff;
+            color: #bebebe;
             position: fixed;
             top: 0;
             left: 0;
@@ -135,8 +135,9 @@
         }
 
         .navbar .title {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
+            color: #bebebe;
         }
 
         .navbar .dropdown {
@@ -145,7 +146,7 @@
 
         .navbar .dropdown-btn {
             background: none;
-            color: #fff;
+            color: #bebebe;
             border: none;
             font-size: 16px;
             cursor: pointer;
@@ -374,7 +375,7 @@
     <!-- Navbar -->
     <div class="navbar">
         <div class="title">
-            <a href="/dashboard" style="color: #fff; text-decoration: none;">Allercheck</a>
+            <a href="/dashboard" style="color: #bebebe; text-decoration: none;">Allercheck</a>
         </div>
         <div class="dropdown">
             <button class="dropdown-btn">{{ Auth::user()->name ?? 'Guest' }}</button>
@@ -423,6 +424,7 @@
         <!-- Button -->
         <div class="button">
             <a href="{{ route('dashboard') }}">Upload Another Image</a>
+            <br></br>
             <a id="feedbackBtn">Give Feedback</a>
         </div>
         <div id="feedbackModal" class="modal" style="display: none;">
@@ -535,7 +537,6 @@
                         <label for="recommend-1">1</label>
                     </div>
                 </div>
-
                 <button type="submit" class="submit-btn">Submit Feedback</button>
             </form>
             </div>

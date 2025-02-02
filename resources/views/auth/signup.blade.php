@@ -185,6 +185,8 @@
 
         <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm Password" required><br>
 
+        <a href="{{ route('login') }}">Cancel</a>
+
         <button type="button" onclick="handleSignup()">Sign Up</button>
     </form>
 </div>

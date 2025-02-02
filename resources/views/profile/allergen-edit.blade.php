@@ -1,59 +1,86 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">Edit Allergen</h1>
+<div class="bg-gray-800 max-w-3xl mx-auto px-8 py-6 rounded-xl shadow-lg mt-12">
+    <h1 class="text-2xl font-bold text-white mb-6 text-center">Edit Allergen</h1>
 
-    <!-- Feedback Messages -->
-    @if ($errors->any())
-        <div class="bg-red-500 text-white p-2 rounded mb-4">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    @if (session('success'))
-        <div class="bg-green-500 text-white p-2 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <!-- Update Allergen Form -->
     <form action="{{ route('profile.allergens.update', $allergen->id) }}" method="POST">
         @csrf
         @method('PATCH')
-        <div class="mb-4">
-            <label for="allergen_name" class="block text-sm font-medium text-gray-700">Allergen Name</label>
+        <div class="mb-6 relative">
+            <label for="allergen_name" class="block text-sm font-medium text-gray-300 mb-2">Allergen Name</label>
             <input 
                 type="text" 
                 name="allergen_name" 
                 id="allergen_name" 
                 value="{{ $allergen->allergen_name }}" 
-                class="rounded-lg px-4 py-2 border focus:ring w-full" 
+                class="w-full px-4 py-2 rounded-lg border border-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                onkeyup="fetchAllergens()" 
                 required>
-        </div>
-        <div class="flex justify-between">
-            <a href="{{ route('profile.edit') }}" class="bg-gray-500 text-white rounded-lg px-4 py-2 hover:bg-gray-600">
-                Cancel
-            </a>
-            <button type="submit" class="bg-blue-500 text-white rounded-lg px-4 py-2">
-                Update Allergen
-            </button>
+            
+            <!-- Suggestions Box -->
+            <ul id="allergen_suggestions" class="absolute bg-white text-black border rounded-lg mt-2 shadow-lg hidden"></ul>
         </div>
     </form>
 
-    <!-- Delete Allergen Form -->
-    <form action="{{ route('profile.allergens.delete', $allergen->id) }}" method="POST" class="mt-4">
-        @csrf
-        @method('DELETE')
-        <div class="flex justify-end">
-            <button type="submit" class="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600">
+    <div class="flex justify-center gap-4 mt-8">
+        <a href="{{ route('profile.edit') }}" class="bg-gray-500 text-white rounded-lg px-6 py-2 hover:bg-gray-600">
+            Cancel
+        </a>
+        <form action="{{ route('profile.allergens.update', $allergen->id) }}" method="POST">
+            @csrf
+            @method('PATCH')
+            <button type="submit" class="bg-gray-500 text-white rounded-lg px-6 py-2 hover:bg-blue-600">
+                Update Allergen
+            </button>
+        </form>
+        <form action="{{ route('profile.allergens.delete', $allergen->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="bg-gray-500 text-white rounded-lg px-6 py-2 hover:bg-red-600">
                 Delete Allergen
             </button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
+
+<script>
+    function fetchAllergens() {
+        const input = document.getElementById('allergen_name').value;
+        const suggestionBox = document.getElementById('allergen_suggestions');
+
+        if (!suggestionBox) {
+            console.error('Suggestion box element not found in the DOM');
+            return;
+        }
+
+        if (input.length < 1) {
+            suggestionBox.classList.add('hidden');
+            return;
+        }
+
+        fetch(`/profile/allergens/suggestions?query=${input}`)
+            .then(response => response.json())
+            .then(data => {
+                suggestionBox.innerHTML = '';
+
+                if (data.length > 0) {
+                    data.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'px-4 py-2 cursor-pointer hover:bg-gray-100';
+                        li.innerText = item.name;
+                        li.onclick = () => {
+                            document.getElementById('allergen_name').value = item.name;
+                            suggestionBox.classList.add('hidden');
+                        };
+                        suggestionBox.appendChild(li);
+                    });
+                    suggestionBox.classList.remove('hidden');
+                } else {
+                    suggestionBox.classList.add('hidden');
+                }
+            })
+            .catch(error => console.error('Error fetching allergen suggestions:', error));
+    }
+</script>
 @endsection
