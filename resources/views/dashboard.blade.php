@@ -355,15 +355,15 @@
 
             <!-- Camera and Photo Preview Section -->
             <div id="camera-preview" style="display: none;">
-            <video id="video" autoplay></video>
-            <canvas id="canvas" style="display: none;"></canvas>
-        </div>
+                <video id="video" autoplay></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+            </div>
 
             <!-- Capture and Retake Photo Buttons -->
             <button id="capturePhotoButton" class="capture-btn" style="display: none;">Capture Photo</button>
             <button id="retakePhotoButton" class="submit-btn" style="display: none;">Retake Photo</button>
 
-            <!-- Upload and Analyze Button (Hidden by default) -->
+            <!-- Upload and Analyze Button -->
             <form id="uploadForm" action="{{ route('upload.image') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="file" name="image" id="fileInput" style="display: none;">
@@ -385,42 +385,9 @@
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const cameraPreview = document.getElementById('camera-preview');
+        const cameraImageInput = document.getElementById('cameraImageInput');
         const orText = document.querySelector('.or-text');
         let cameraStream = null;
-
-        document.addEventListener("DOMContentLoaded", () => {
-        const analyzeButton = document.getElementById("analyzeButton");
-        const cameraImageInput = document.getElementById("cameraImageInput");
-        const fileInput = document.getElementById("fileInput");
-
-        // Function to display a popup
-        const showPopup = (message) => {
-            const popup = document.createElement("div");
-            popup.textContent = message;
-            popup.style.position = "fixed";
-            popup.style.top = "60%";
-            popup.style.left = "65%";
-            popup.style.transform = "translate(-50%, -50%)";
-            popup.style.padding = "20px";
-            popup.style.backgroundColor = "#f44336";
-            popup.style.color = "#fff";
-            popup.style.borderRadius = "8px";
-            popup.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
-            popup.style.zIndex = "1000";
-            document.body.appendChild(popup);
-
-            setTimeout(() => {
-                document.body.removeChild(popup);
-            }, 3000);
-        };
-
-        analyzeButton.addEventListener("click", (event) => {
-            if (!cameraImageInput.value && !fileInput.value) {
-                event.preventDefault(); // Prevent form submission
-                showPopup("Please take a photo or upload an image before analyzing.");
-            }
-        });
-    });
 
         // Add styles and functionality to the back button
         backButton.textContent = "Back";
@@ -440,7 +407,7 @@
             retakePhotoButton.style.display = 'none';
             backButton.style.display = 'none';
             analyzeButton.style.display = 'none'; 
-            imageName.style.display = 'none'; // Ensure file name is hidden initially
+            imageName.style.display = 'none'; 
         };
 
         // Handle "Upload Image" button click
@@ -465,7 +432,7 @@
             const file = fileInput.files[0];
             if (file) {
                 imageName.textContent = `Selected Image: ${file.name}`;
-                imageName.style.display = 'block'; // Show file name only in upload
+                imageName.style.display = 'block'; 
             }
         });
 
@@ -485,7 +452,7 @@
                 })
                 .catch(err => console.error("Error accessing camera: ", err));
 
-            imageName.style.display = 'none'; // Hide file name in photo capture mode
+            imageName.style.display = 'none';
         });
 
         // Handle back button click
@@ -494,6 +461,8 @@
             takePhotoButton.style.display = 'block';
             analyzeButton.style.display = 'none'; 
             backButton.style.display = 'none';
+            orText.style.display = 'block';
+
             cameraPreview.style.display = 'none';
             capturePhotoButton.style.display = 'none';
             retakePhotoButton.style.display = 'none';
@@ -505,94 +474,50 @@
 
             video.style.display = 'none';
             canvas.style.display = 'none';
-            imageName.style.display = 'none'; // Hide file name on reset
+
+            // Reset hidden inputs for images
+            cameraImageInput.value = ''; 
+            fileInput.value = ''; 
+            imageName.style.display = 'none';
+            imageName.textContent = ''; 
         });
 
         // Capture photo
-    capturePhotoButton.addEventListener('click', () => {
-        const context = canvas.getContext('2d');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+        capturePhotoButton.addEventListener('click', () => {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
 
-        // Draw the current video frame onto the canvas
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Convert the canvas to an image (data URL)
-        const dataUrl = canvas.toDataURL('image/jpeg');
-        cameraImageInput.value = dataUrl; // Store the image in the hidden input field
+            const dataUrl = canvas.toDataURL('image/jpeg');
+            cameraImageInput.value = dataUrl; 
 
-        // Display the captured photo on the canvas
-        video.style.display = 'none'; // Hide the video feed
-        canvas.style.display = 'block'; // Show the captured image
+            video.style.display = 'none'; 
+            canvas.style.display = 'block';
 
-        // Adjust button visibility
-        capturePhotoButton.style.display = 'none'; // Hide "Capture Photo" button
-        const retakePhotoButton = document.getElementById('retakePhotoButton');
-        retakePhotoButton.style.display = 'block'; // Show "Retake Photo" button
-
-        // Stop the camera after capturing the photo
-        if (cameraStream) {
-            cameraStream.getTracks().forEach(track => track.stop());
-            cameraStream = null;
-        }
-    });
-
-    retakePhotoButton.addEventListener('click', () => {
-    // Hide the captured canvas and show the video feed again
-    canvas.style.display = 'none';
-    video.style.display = 'block';
-    capturePhotoButton.style.display = 'block'; // Show the "Capture Photo" button
-    retakePhotoButton.style.display = 'none'; // Hide the "Retake Photo" button
-
-    // Restart the camera stream
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-            cameraStream = stream;
-            video.srcObject = stream;
-        })
-        .catch(err => console.error("Error accessing camera for retake: ", err));
-});
-
- // Ensure initial visibility of elements
- window.onload = () => {
-            orText.style.display = 'block'; // Hide "OR" text initially
-        };
-
-        // Handle "Upload Image" button click
-        uploadImageButton.addEventListener('click', () => {
-            takePhotoButton.style.display = 'none';
-            backButton.style.display = 'block';
-            orText.style.display = 'none'; // Hide "OR" text when uploading
-            backButton.style.display = 'block'; // Show back button below Analyze
-        });
-
-        // Handle "Take a Photo" button click
-        takePhotoButton.addEventListener('click', () => {
-            uploadImageButton.style.display = 'none';
-            backButton.style.display = 'block';
-            orText.style.display = 'none'; // Hide "OR" text when taking a photo
-        });
-
-        // Handle "Back" button click
-        backButton.addEventListener('click', () => {
-            uploadImageButton.style.display = 'block';
-            takePhotoButton.style.display = 'block';
-            analyzeButton.style.display = 'none'; 
-            backButton.style.display = 'none';
-            orText.style.display = 'block'; // Show "OR" text when going back
-
-            cameraPreview.style.display = 'none';
-            capturePhotoButton.style.display = 'none';
-            retakePhotoButton.style.display = 'none';
+            capturePhotoButton.style.display = 'none'; 
+            retakePhotoButton.style.display = 'block';
 
             if (cameraStream) {
                 cameraStream.getTracks().forEach(track => track.stop());
                 cameraStream = null;
             }
+        });
 
-            video.style.display = 'none';
+        // Retake photo
+        retakePhotoButton.addEventListener('click', () => {
             canvas.style.display = 'none';
-            imageName.style.display = 'none'; // Hide file name on reset
+            video.style.display = 'block';
+            capturePhotoButton.style.display = 'block';
+            retakePhotoButton.style.display = 'none';
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    cameraStream = stream;
+                    video.srcObject = stream;
+                })
+                .catch(err => console.error("Error accessing camera for retake: ", err));
         });
     </script>
 </body>
