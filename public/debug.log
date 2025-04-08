@@ -1,0 +1,92 @@
+2025-02-06 02:57:08,432 - INFO - Script started with input_image: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/PPSw0tEPuRmUp21qYFjLnfE5n0sd7oOBjO5maw14.jpg, output_image: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/result_4vqJ7LvEdF.jpg
+2025-02-06 02:57:08,432 - ERROR - The image path C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/PPSw0tEPuRmUp21qYFjLnfE5n0sd7oOBjO5maw14.jpg does not exist.
+2025-02-06 03:15:57,777 - INFO - Script started with input_image: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/ZVMk2xkmdnvV4j8GaujlfoAhiW2485xO1N0YXXbG.jpg, output_image: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/result_WY3GJshWuw.jpg
+2025-02-06 03:15:57,778 - INFO - Roboflow client initialized successfully.
+2025-02-06 03:15:57,778 - INFO - Calling Roboflow API with image: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/ZVMk2xkmdnvV4j8GaujlfoAhiW2485xO1N0YXXbG.jpg
+2025-02-06 03:16:02,193 - INFO - Roboflow API response: [
+  {
+    "predictions": {
+      "image": {
+        "width": 998,
+        "height": 1000
+      },
+      "predictions": [
+        {
+          "width": 719.0,
+          "height": 731.0,
+          "x": 487.5,
+          "y": 545.5,
+          "confidence": 0.8814817667007446,
+          "class_id": 0,
+          "class": "Apple",
+          "detection_id": "d604170d-d26d-43d1-a7cc-2e5ad724d436",
+          "parent_id": "image"
+        }
+      ]
+    }
+  }
+]
+2025-02-06 03:16:02,193 - INFO - Predictions received: [{'width': 719.0, 'height': 731.0, 'x': 487.5, 'y': 545.5, 'confidence': 0.8814817667007446, 'class_id': 0, 'class': 'Apple', 'detection_id': 'd604170d-d26d-43d1-a7cc-2e5ad724d436', 'parent_id': 'image'}]
+2025-02-06 03:16:02,221 - INFO - Annotating prediction: Apple (0.88), Box: (128, 180, 719, 731)
+2025-02-06 03:16:02,243 - INFO - Annotated image saved to: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/result_WY3GJshWuw.jpg
+2025-02-06 03:16:02,243 - INFO - Script completed successfully.
+2025-02-06 03:16:44,649 - INFO - Script started with input_image: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/N54aWUilv1WW01MjJhdcRwtHgI02LYOESSy7SVCu.jpg, output_image: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/result_7o1b7MuTYB.jpg
+2025-02-06 03:16:44,649 - INFO - Roboflow client initialized successfully.
+2025-02-06 03:16:44,649 - INFO - Calling Roboflow API with image: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/N54aWUilv1WW01MjJhdcRwtHgI02LYOESSy7SVCu.jpg
+2025-02-06 03:16:47,855 - INFO - Roboflow API response: [
+  {
+    "predictions": {
+      "image": {
+        "width": 998,
+        "height": 1000
+      },
+      "predictions": [
+        {
+          "width": 719.0,
+          "height": 731.0,
+          "x": 487.5,
+          "y": 545.5,
+          "confidence": 0.8814817667007446,
+          "class_id": 0,
+          "class": "Apple",
+          "detection_id": "86cc61ba-cb8f-4e82-908c-212a07a3eca1",
+          "parent_id": "image"
+        }
+      ]
+    }
+  }
+]
+2025-02-06 03:16:47,855 - INFO - Predictions received: [{'width': 719.0, 'height': 731.0, 'x': 487.5, 'y': 545.5, 'confidence': 0.8814817667007446, 'class_id': 0, 'class': 'Apple', 'detection_id': '86cc61ba-cb8f-4e82-908c-212a07a3eca1', 'parent_id': 'image'}]
+2025-02-06 03:16:47,870 - INFO - Annotating prediction: Apple (0.88), Box: (128, 180, 719, 731)
+2025-02-06 03:16:47,886 - INFO - Annotated image saved to: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/result_7o1b7MuTYB.jpg
+2025-02-06 03:16:47,886 - INFO - Script completed successfully.
+2025-02-06 13:15:45,862 - INFO - Script started with input_image: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/RcMn5Suh8X3SM3cPtK1X8lm5AGT6Vqx9oInlrKQi.jpg, output_image: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/result_MTiKI1Bvoo.jpg
+2025-02-06 13:15:45,863 - INFO - Roboflow client initialized successfully.
+2025-02-06 13:15:45,863 - INFO - Calling Roboflow API with image: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/RcMn5Suh8X3SM3cPtK1X8lm5AGT6Vqx9oInlrKQi.jpg
+2025-02-06 13:15:50,019 - INFO - Roboflow API response: [
+  {
+    "predictions": {
+      "image": {
+        "width": 224,
+        "height": 225
+      },
+      "predictions": [
+        {
+          "width": 177.0,
+          "height": 172.0,
+          "x": 111.5,
+          "y": 112.0,
+          "confidence": 0.8526263236999512,
+          "class_id": 6,
+          "class": "Cabbage",
+          "detection_id": "b3e57ce1-5d28-42f5-81f4-fa45d992f0f5",
+          "parent_id": "image"
+        }
+      ]
+    }
+  }
+]
+2025-02-06 13:15:50,019 - INFO - Predictions received: [{'width': 177.0, 'height': 172.0, 'x': 111.5, 'y': 112.0, 'confidence': 0.8526263236999512, 'class_id': 6, 'class': 'Cabbage', 'detection_id': 'b3e57ce1-5d28-42f5-81f4-fa45d992f0f5', 'parent_id': 'image'}]
+2025-02-06 13:15:50,031 - INFO - Annotating prediction: Cabbage (0.85), Box: (23, 26, 177, 172)
+2025-02-06 13:15:50,040 - INFO - Annotated image saved to: C:\Users\Tep Ocampo\Capstone-2-Group-5\public\storage/images/result_MTiKI1Bvoo.jpg
+2025-02-06 13:15:50,040 - INFO - Script completed successfully.

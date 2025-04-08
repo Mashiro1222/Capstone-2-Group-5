@@ -1,0 +1,26 @@
+<IfModule mod_rewrite.c>
+    Options +FollowSymLinks
+    RewriteEngine On
+
+    # Allow access to the storage folder
+    <Directory "/home/u316874775/public_html/storage/">
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    # Allow access to public storage directory specifically
+    RewriteCond %{REQUEST_URI} ^/storage/ [OR]
+    RewriteCond %{REQUEST_URI} ^/public/storage/
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Redirect all other requests to the Laravel public directory
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # Ensure the index.php is still reachable
+    RewriteRule ^(/)?$ public/index.php [L]
+</IfModule>

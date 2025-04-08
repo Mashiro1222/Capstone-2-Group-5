@@ -123,7 +123,8 @@
         @media (max-width: 1050px) {
             .container {
                 flex-direction: column; /* Stack sections vertically */
-                max-width: 100%; /* Full width */
+                width: 100%;
+                max-width: 400px;
             }
 
             .branding-section {
@@ -171,7 +172,7 @@
             </p>
         </div>
         <div class="form-section">
-    <h1>Signup</h1>
+    <h1>Sign up</h1>
     <form id="signupForm">
         @csrf
         <input type="text" name="name" id="name" placeholder="Name" value="{{ old('name') }}" required><br>

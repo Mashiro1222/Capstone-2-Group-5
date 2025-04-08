@@ -24,7 +24,19 @@ class AuthController extends Controller
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:8|confirmed',
+        'password' => [
+            'required',
+            'string',
+            'min:8', // Minimum 8 characters
+            'regex:/[A-Z]/', // At least one uppercase letter
+            'regex:/[0-9]/', // At least one number
+            'regex:/[@$!%*?&]/', // At least one special character
+            'confirmed' // Ensures password_confirmation matches password
+        ],
+    ], [
+        'password.min' => 'Password must be at least 8 characters.',
+        'password.regex' => 'Password must contain at least: one uppercase letter, one number, and one special character (@$!%*?&).',
+        'password.confirmed' => 'Passwords do not match.'
     ]);
 
     $user = User::create([
@@ -52,7 +64,7 @@ class AuthController extends Controller
     {
         return view('auth.login');
     }
-
+    
     // Process Login
     public function processLogin(Request $request)
     {
@@ -60,18 +72,20 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
+    
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
+    
             // Redirect based on user role
             return redirect()->intended($this->redirectTo());
         }
-
+    
+        // Return with an error message
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+            'login' => 'Invalid email or password. Please try again.',
+        ])->withInput();
     }
+
 
     // Redirect to appropriate dashboard based on user role
     public function redirectTo()

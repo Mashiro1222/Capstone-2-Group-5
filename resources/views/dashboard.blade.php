@@ -194,6 +194,7 @@
         }
 
         .navbar .dropdown-btn {
+            font-family: 'Made Outer Sans', Arial, sans-serif;
             background: none;
             color: #bebebe;
             border: none;
@@ -205,9 +206,30 @@
             white-space: nowrap; /* Prevent wrapping */
             overflow: hidden; /* Hide overflowing text */
             text-overflow: ellipsis; /* Add ellipsis for overflow */
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Spacing between text and icon */
+        }
+        
+        .navbar .dropdown-btn::after {
+            content: "▼"; /* Unicode Downward Arrow */
+            font-size: 12px;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        /* Rotate icon when dropdown is open */
+        .navbar .dropdown-btn.active::after {
+            transform: rotate(180deg);
+        }
+        
+                /* Minimal hover effect */
+        .navbar .dropdown-btn:hover {
+            color: #e0e0e0; /* Slightly brighter hover color */
         }
 
+
         .navbar .dropdown-content {
+            font-family: 'Made Outer Sans', Arial, sans-serif;
             display: none;
             position: absolute;
             right: 0;
@@ -221,6 +243,7 @@
         }
 
         .navbar .dropdown-content a {
+            font-family: 'Made Outer Sans', Arial, sans-serif;
             display: block;
             text-decoration: none;
             color: #333;
@@ -246,7 +269,7 @@
         border: none;
         border-radius: 10px;
         cursor: pointer;
-        margin-top: 20px; /* Space between Analyze button and Back button */
+        margin-top: 30px; /* Space between Analyze button and Back button */
     }
 
     #backButton:hover {
@@ -261,10 +284,13 @@
         background-color: red;
     }
 
-    #uploadForm{
+    #uploadForm {
         width: 100%;
-        display: block;
-        padding-left: 7rem;
+        display: flex; /* Use flexbox for centering */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically if needed */
+        padding: 0; /* Adjust padding if necessary */
+        margin: 0 auto; /* Center horizontally with margin auto */
     }
     #uploadForm button{
         width: 80%;
@@ -318,37 +344,43 @@
 <body>
     <!-- Navbar -->
     <div class="navbar">
-        <div class="title">Allercheck</div>
+        <div class="title">AllerCheck</div>
         <div class="dropdown">
             <button class="dropdown-btn"> {{ Auth::user()->name ?? 'Guest' }}</button>
             <div class="dropdown-content">
-                <a href="/profile">Edit Profile</a>
+                <a href="/profile">Profile</a>
                 <a href="/history">History</a>
-                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                <form method="POST" action="{{ route('logout') }}" id="logout-form">
                     @csrf
-                    <button type="submit" style="background: none; border: none; color: #333; padding: 10px 20px; cursor: pointer;">
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+                        style="display: block; text-decoration: none; color: #333; padding: 10px 20px;">
                         Logout
-                    </button>
+                    </a>
                 </form>
             </div>
         </div>
     </div>
+
     
     <div class="container">
         <!-- Left Section -->
         <div class="left-section">
             <h1>ALLERCHECK</h1>
-            <p>Your guide to fruits & vegetables allergies</p>
+            <p>Your guide to fruit & vegetable allergies</p>
+             
         </div>
 
         <!-- Right Section -->
         <div class="right-section">
-            <p>Discover the possible allergies that may arise from the fruits and vegetables you eat.</p>
+            <p>Discover the possible allergies that may arise from the fruit and vegetable you eat.</p>
+
             
             <!-- Upload Image Button -->
             <button id="uploadImageButton">Upload Image</button>
             <div id="imageName" class="image-name" style="display: none;"></div>
             <div class="or-text">OR</div>
+            
+          
             
             <!-- Take a Photo Button -->
             <button id="takePhotoButton" class="capture-btn">Take a Photo</button>
@@ -358,17 +390,26 @@
                 <video id="video" autoplay></video>
                 <canvas id="canvas" style="display: none;"></canvas>
             </div>
-
+            
+             
             <!-- Capture and Retake Photo Buttons -->
             <button id="capturePhotoButton" class="capture-btn" style="display: none;">Capture Photo</button>
             <button id="retakePhotoButton" class="submit-btn" style="display: none;">Retake Photo</button>
+            
+            <!-- Loader (Hidden Initially) -->
+            <div id="loaderContainer" style="display: none;">
+                <p>Analyzing...</p>
+            </div>
 
             <!-- Upload and Analyze Button -->
             <form id="uploadForm" action="{{ route('upload.image') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <input type="file" name="image" id="fileInput" style="display: none;">
+                <input type="file" name="image" id="fileInput" accept=".jpg, .jpeg, .png" style="display: none;">
                 <input type="hidden" name="camera_image" id="cameraImageInput">
-                <button type="submit" class="submit-btn" id="analyzeButton" style="display: none;">Analyze</button>
+                <button type="submit" class="submit-btn" id="analyzeButton" style="display: none ;">Analyze</button>
+                @error('image') 
+                    <span style="color: red;">{{ $message }}</span><br>
+                @enderror
             </form>
         </div>
     </div>
@@ -387,7 +428,42 @@
         const cameraPreview = document.getElementById('camera-preview');
         const cameraImageInput = document.getElementById('cameraImageInput');
         const orText = document.querySelector('.or-text');
+        const loaderContainer = document.getElementById('loaderContainer');
         let cameraStream = null;
+        
+      // Handle "Analyze" button click
+        analyzeButton.addEventListener('click', (event) => {
+            // Prevent form submission if no image is selected
+            if (!fileInput.value && !cameraImageInput.value) {
+                event.preventDefault();
+                alert('Please upload or capture an image before analyzing.');
+                return;
+            }
+
+            // Hide buttons and show loader
+            uploadImageButton.style.display = 'none';
+            takePhotoButton.style.display = 'none';
+            analyzeButton.style.display = 'none';
+            loaderContainer.style.display = 'block';
+            backButton.style.display='none';
+            retakePhotoButton.style.display = 'none'
+        });
+    // Enable the Analyze button if an image is uploaded
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (file) {
+            imageName.textContent = `Selected Image: ${file.name}`;
+            imageName.style.display = 'block'; 
+            analyzeButton.disabled = false; // Enable Analyze button
+        }
+    });
+
+    // Enable the Analyze button if a camera image is captured
+    cameraImageInput.addEventListener('input', () => {
+        if (cameraImageInput.value) {
+            analyzeButton.disabled = false; // Enable Analyze button
+        }
+    });
 
         // Add styles and functionality to the back button
         backButton.textContent = "Back";
@@ -398,6 +474,9 @@
         // Add back button to the DOM
         const rightSection = document.querySelector('.right-section');
         rightSection.insertBefore(backButton, rightSection.lastChild);
+        
+        // Detect if the user is on a mobile device or PC
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
         // Ensure initial visibility of elements
         window.onload = () => {
@@ -408,13 +487,36 @@
             backButton.style.display = 'none';
             analyzeButton.style.display = 'none'; 
             imageName.style.display = 'none'; 
+            orText.style.display = 'block';
+            backButton.style.display = 'none';
+            
+            // Check if the user is on a mobile device and hide "Take a Photo" button
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                takePhotoButton.style.display = 'none'; // Hide "Take a Photo" button on mobile devices
+                orText.style.display = 'none';          // Hide "OR" text on mobile devices
+                uploadImageButton.textContent = 'Upload Image or Take a Photo'; // Update button text on mobile
+                backButton.style.display = 'none'; // Hide the "Back" button on mobile devices
+            } else {
+                takePhotoButton.style.display = 'block'; // Show "Take a Photo" button on PCs
+                orText.style.display = 'block';          // Show "OR" text on PCs
+                uploadImageButton.textContent = 'Upload Image'; // Reset button text on PCs
+            }
         };
 
         // Handle "Upload Image" button click
         uploadImageButton.addEventListener('click', () => {
             takePhotoButton.style.display = 'none';
             analyzeButton.style.display = 'block'; 
-            backButton.style.display = 'block';
+            orText.style.display = 'none';  
+            
+            
+            // Check if the user is on a mobile device
+            if (isMobile) {
+                backButton.style.display = 'none'; // Keep back button hidden on mobile
+            } else {
+                backButton.style.display = 'block'; // Show back button on PCs
+            }
 
             if (cameraStream) {
                 cameraStream.getTracks().forEach(track => track.stop());
@@ -441,6 +543,7 @@
             uploadImageButton.style.display = 'none';
             analyzeButton.style.display = 'block'; 
             backButton.style.display = 'block';
+             orText.style.display = 'none';
 
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(stream => {
@@ -449,6 +552,7 @@
                     cameraPreview.style.display = 'block';
                     video.style.display = 'block';
                     capturePhotoButton.style.display = 'block';
+                    takePhotoButton.style.display = 'none';
                 })
                 .catch(err => console.error("Error accessing camera: ", err));
 
@@ -463,6 +567,7 @@
             backButton.style.display = 'none';
             orText.style.display = 'block';
 
+            
             cameraPreview.style.display = 'none';
             capturePhotoButton.style.display = 'none';
             retakePhotoButton.style.display = 'none';
@@ -519,6 +624,7 @@
                 })
                 .catch(err => console.error("Error accessing camera for retake: ", err));
         });
+
     </script>
 </body>
 </html>

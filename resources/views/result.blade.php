@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Allergen Results</title>
     <style>
         @font-face {
@@ -117,6 +119,7 @@
         .button a:hover {
             background-color: rgb(248, 70, 70);
             transform: scale(1.05);
+            cursor: pointer;
         }
 
         .navbar {
@@ -145,6 +148,7 @@
         }
 
         .navbar .dropdown-btn {
+            font-family: 'Made Outer Sans', Arial, sans-serif;
             background: none;
             color: #bebebe;
             border: none;
@@ -156,6 +160,25 @@
             white-space: nowrap; /* Prevent wrapping */
             overflow: hidden; /* Hide overflowing text */
             text-overflow: ellipsis; /* Add ellipsis for overflow */
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Spacing between text and icon */
+        }
+        
+        .navbar .dropdown-btn::after {
+            content: "▼"; /* Unicode Downward Arrow */
+            font-size: 12px;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        /* Rotate icon when dropdown is open */
+        .navbar .dropdown-btn.active::after {
+            transform: rotate(180deg);
+        }
+        
+                /* Minimal hover effect */
+        .navbar .dropdown-btn:hover {
+            color: #e0e0e0; /* Slightly brighter hover color */
         }
 
         .navbar .dropdown-content {
@@ -263,6 +286,8 @@
         .radio-group {
             display: flex;
             justify-content: space-around;
+            gap: 10px;
+            flex-wrap: wrap; /* Allow wrapping */
             max-width: 300px;
             margin: 0 auto;
         }
@@ -278,8 +303,8 @@
             padding: 10px 12px;
             border: 2px solid #ddd;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             line-height: 20px;
             text-align: center;
             transition: all 0.3s ease;
@@ -317,16 +342,45 @@
             transform: scale(1.05);
         }
 
-        /* Responsiveness */
-        @media (max-width: 768px) {
+        /* Responsive Design */
+        @media (max-width: 750px) {
+            .header {
+                font-size: 22px;
+            }
+
+            .image-section img {
+                max-width: 200px;
+            }
+
+            .info-section h4 {
+                font-size: 18px;
+            }
+            
+            .info-section p strong {
+                font-size: 15px;
+            }
+
+            .info-section p {
+                font-size: 12px;
+            }
+
+            .button a {
+                font-size: 12px;
+                padding: 8px 15px;
+            }
+
+            .navbar .title {
+                font-size: 1.2rem;
+            }
+            
             .modal-content {
                 width: 80%;
                 padding: 15px 20px;
             }
 
             .radio-group {
-                flex-wrap: wrap;
-                gap: 10px;
+                justify-content: center; /* Center-align on mobile */
+                gap: 15px; /* Increase spacing between items */
             }
 
             .radio-group label {
@@ -339,34 +393,7 @@
                 font-size: 14px;
                 padding: 8px 15px;
             }
-        }
 
-        /* Responsive Design */
-        @media (max-width: 1050px) {
-            .header {
-                font-size: 2rem;
-            }
-
-            .image-section img {
-                max-width: 200px;
-            }
-
-            .info-section h4 {
-                font-size: 1.5rem;
-            }
-
-            .info-section p {
-                font-size: 1.2rem;
-            }
-
-            .button a {
-                padding: 8px 15px;
-                font-size: 1.2rem;
-            }
-
-            .navbar .title {
-                font-size: 1.2rem;
-            }
         }
 
     </style>
@@ -375,22 +402,25 @@
     <!-- Navbar -->
     <div class="navbar">
         <div class="title">
-            <a href="/dashboard" style="color: #bebebe; text-decoration: none;">Allercheck</a>
+            <a href="/dashboard" style="color: #bebebe; text-decoration: none;">AllerCheck</a>
         </div>
         <div class="dropdown">
             <button class="dropdown-btn">{{ Auth::user()->name ?? 'Guest' }}</button>
             <div class="dropdown-content">
-                <a href="/profile">Edit Profile</a>
+                <a href="/profile">Profile</a>
+                <a href="/dashboard">Dashboard</a>
                 <a href="/history">History</a>
-                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                <form method="POST" action="{{ route('logout') }}" id="logout-form">
                     @csrf
-                    <button type="submit" style="background: none; border: none; color: #333; padding: 10px 20px; cursor: pointer;">
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+                        style="display: block; text-decoration: none; color: #333; padding: 10px 20px;">
                         Logout
-                    </button>
+                    </a>
                 </form>
             </div>
         </div>
     </div>
+    
     <div class="container">
         <!-- Header -->
         <div class="header">Allergen Results</div>
@@ -421,177 +451,26 @@
             <p><strong>Additional Info:</strong> {{ $matchedItems[0]['essential_information'] ?? 'N/A' }}</p>
         </div>
 
-        <!-- Button -->
+       <!-- Button -->
         <div class="button">
+            @foreach ($detectedClasses as $detectedClass)
+                <div class="mt-4">
+                    <a 
+                        href="#" 
+                        class="button a" 
+                        data-class="{{ $detectedClass }}">
+                        Add Allergen
+                    </a>
+                    <p id="add-allergen-message" class="mt-2 text-sm text-gray-700 hidden"></p>
+                </div>
+            @endforeach
+            <p id="add-allergen-message" class="mt-4 text-sm text-gray-700 hidden"></p>
             <a href="{{ route('dashboard') }}">Upload Another Image</a>
-            <br></br>
-            <a id="feedbackBtn">Give Feedback</a>
         </div>
-        <div id="feedbackModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>We value your feedback!</h2>
-            <form id="feedbackForm" action="{{ route('user.feedback.submit') }}" method="POST">
-                @csrf
-                <!-- Question 1 -->
-                <div class="question">
-                    <p>1. How accurate do you feel the allergen detection results are?</p>
-                    <div class="radio-group">
-                        <input type="radio" name="accuracy" value="5" id="accuracy-5" required>
-                        <label for="accuracy-5">5</label>
-
-                        <input type="radio" name="accuracy" value="4" id="accuracy-4">
-                        <label for="accuracy-4">4</label>
-
-                        <input type="radio" name="accuracy" value="3" id="accuracy-3">
-                        <label for="accuracy-3">3</label>
-
-                        <input type="radio" name="accuracy" value="2" id="accuracy-2">
-                        <label for="accuracy-2">2</label>
-
-                        <input type="radio" name="accuracy" value="1" id="accuracy-1">
-                        <label for="accuracy-1">1</label>
-                    </div>
-                </div>
-
-                <!-- Question 2 -->
-                <div class="question">
-                    <p>2. How easy was it to upload or capture an image using AllerCheck?</p>
-                    <div class="radio-group">
-                        <input type="radio" name="ease" value="5" id="ease-5" required>
-                        <label for="ease-5">5</label>
-
-                        <input type="radio" name="ease" value="4" id="ease-4">
-                        <label for="ease-4">4</label>
-
-                        <input type="radio" name="ease" value="3" id="ease-3">
-                        <label for="ease-3">3</label>
-
-                        <input type="radio" name="ease" value="2" id="ease-2">
-                        <label for="ease-2">2</label>
-
-                        <input type="radio" name="ease" value="1" id="ease-1">
-                        <label for="ease-1">1</label>
-                    </div>
-                </div>
-
-                <!-- Question 3 -->
-                <div class="question">
-                    <p>3. How helpful is the information provided (scientific name, allergens, symptoms, additional info)?</p>
-                    <div class="radio-group">
-                        <input type="radio" name="info_helpfulness" value="5" id="info-5" required>
-                        <label for="info-5">5</label>
-
-                        <input type="radio" name="info_helpfulness" value="4" id="info-4">
-                        <label for="info-4">4</label>
-
-                        <input type="radio" name="info_helpfulness" value="3" id="info-3">
-                        <label for="info-3">3</label>
-
-                        <input type="radio" name="info_helpfulness" value="2" id="info-2">
-                        <label for="info-2">2</label>
-
-                        <input type="radio" name="info_helpfulness" value="1" id="info-1">
-                        <label for="info-1">1</label>
-                    </div>
-                </div>
-
-                <!-- Question 4 -->
-                <div class="question">
-                    <p>4. How satisfied are you with the overall design and layout of the application?</p>
-                    <div class="radio-group">
-                        <input type="radio" name="design" value="5" id="design-5" required>
-                        <label for="design-5">5</label>
-
-                        <input type="radio" name="design" value="4" id="design-4">
-                        <label for="design-4">4</label>
-
-                        <input type="radio" name="design" value="3" id="design-3">
-                        <label for="design-3">3</label>
-
-                        <input type="radio" name="design" value="2" id="design-2">
-                        <label for="design-2">2</label>
-
-                        <input type="radio" name="design" value="1" id="design-1">
-                        <label for="design-1">1</label>
-                    </div>
-                </div>
-
-                <!-- Question 5 -->
-                <div class="question">
-                    <p>5. Would you recommend AllerCheck to others for allergen detection?</p>
-                    <div class="radio-group">
-                        <input type="radio" name="recommend" value="5" id="recommend-5" required>
-                        <label for="recommend-5">5</label>
-
-                        <input type="radio" name="recommend" value="4" id="recommend-4">
-                        <label for="recommend-4">4</label>
-
-                        <input type="radio" name="recommend" value="3" id="recommend-3">
-                        <label for="recommend-3">3</label>
-
-                        <input type="radio" name="recommend" value="2" id="recommend-2">
-                        <label for="recommend-2">2</label>
-
-                        <input type="radio" name="recommend" value="1" id="recommend-1">
-                        <label for="recommend-1">1</label>
-                    </div>
-                </div>
-                <button type="submit" class="submit-btn">Submit Feedback</button>
-            </form>
-            </div>
-        </div>
-    </div>
 
     <!-- JavaScript -->
     <script>
-        const feedbackBtn = document.getElementById("feedbackBtn");
-        const feedbackModal = document.getElementById("feedbackModal");
-        const closeBtn = document.querySelector(".close");
-
-        feedbackBtn.addEventListener("click", () => {
-            feedbackModal.style.display = "block";
-        });
-
-        closeBtn.addEventListener("click", () => {
-            feedbackModal.style.display = "none";
-        });
-
-        window.addEventListener("click", (event) => {
-            if (event.target === feedbackModal) {
-                feedbackModal.style.display = "none";
-            }
-        });
-
-        const feedbackForm = document.getElementById("feedbackForm");
-
-        feedbackForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            const formData = new FormData(feedbackForm);
-            try {
-                const response = await fetch("{{ route('user.feedback.submit') }}", {
-                    method: "POST",
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                    },
-                    body: formData,
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    alert(data.message || "Thank you for your feedback!");
-                    feedbackModal.style.display = "none";
-                } else {
-                    const errorData = await response.json();
-                    alert(errorData.message || "Something went wrong. Please try again.");
-                }
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Failed to submit feedback. Please try again.");
-            }
-
-            document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
         // Simulate a request to get detection results
         fetch('/api/results') // Replace with your actual endpoint
             .then(response => response.json())
@@ -612,9 +491,55 @@
                 console.error('Error fetching result:', error);
             });
         });
-    });
-
         
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('click', function (event) {
+                // Check if the clicked element matches the .button.a class
+                if (event.target.matches('.button.a')) {
+                    event.preventDefault(); // Prevent the default behavior of the <a> element
+        
+                    const allergenName = event.target.getAttribute('data-class');
+                    const messageElement = document.getElementById('add-allergen-message');
+        
+                    fetch('{{ route("add.allergen") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        },
+                        body: JSON.stringify({ name: allergenName }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Success: Display the success message
+                            messageElement.textContent = data.message;
+                            messageElement.classList.remove('hidden');
+                            messageElement.style.color = 'green';
+        
+                            // Optionally remove the button after adding
+                            event.target.remove();
+                        } else {
+                            // Already exists or error: Display the message
+                            messageElement.textContent = data.message;
+                            messageElement.classList.remove('hidden');
+                            messageElement.style.color = 'red';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        messageElement.textContent = 'An error occurred while processing your request.';
+                        messageElement.classList.remove('hidden');
+                        messageElement.style.color = 'red';
+                    });
+                }
+            });
+        });
+
+
+
+
     </script>
 </body>
 </html>

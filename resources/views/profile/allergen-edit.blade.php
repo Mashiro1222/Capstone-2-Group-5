@@ -4,10 +4,10 @@
 <div class="bg-gray-800 max-w-3xl mx-auto px-8 py-6 rounded-xl shadow-lg mt-12">
     <h1 class="text-2xl font-bold text-white mb-6 text-center">Edit Allergen</h1>
 
-    <form action="{{ route('profile.allergens.update', $allergen->id) }}" method="POST">
+    <form action="{{ route('profile.allergens.update', $allergen->id) }}" method="POST" class="w-full max-w-2xl mx-auto">
         @csrf
         @method('PATCH')
-        <div class="mb-6 relative">
+        <div class="mb-6 relative w-full">
             <label for="allergen_name" class="block text-sm font-medium text-gray-300 mb-2">Allergen Name</label>
             <input 
                 type="text" 
@@ -19,25 +19,25 @@
                 required>
             
             <!-- Suggestions Box -->
-            <ul id="allergen_suggestions" class="absolute bg-white text-black border rounded-lg mt-2 shadow-lg hidden"></ul>
+            <ul id="allergen_suggestions" class="absolute bg-white text-black border rounded-lg mt-2 shadow-lg hidden w-full"></ul>
         </div>
     </form>
 
-    <div class="flex justify-center gap-4 mt-8">
-        <a href="{{ route('profile.edit') }}" class="bg-gray-500 text-white rounded-lg px-6 py-2 hover:bg-gray-600">
+    <div class="flex justify-center gap-4 mt-8 w-full max-w-2xl mx-auto">
+        <a href="{{ route('profile.edit') }}" class="bg-gray-500 text-white rounded-lg px-6 py-2 hover:bg-gray-600 text-center">
             Cancel
         </a>
         <form action="{{ route('profile.allergens.update', $allergen->id) }}" method="POST">
             @csrf
             @method('PATCH')
-            <button type="submit" class="bg-gray-500 text-white rounded-lg px-6 py-2 hover:bg-blue-600">
+            <button type="submit" class="bg-gray-500 text-white rounded-lg px-6 py-2 hover:bg-blue-600 text-center">
                 Update Allergen
             </button>
         </form>
         <form action="{{ route('profile.allergens.delete', $allergen->id) }}" method="POST">
             @csrf
             @method('DELETE')
-            <button type="submit" class="bg-gray-500 text-white rounded-lg px-6 py-2 hover:bg-red-600">
+            <button type="submit" class="bg-gray-500 text-white rounded-lg px-6 py-2 hover:bg-red-600 text-center">
                 Delete Allergen
             </button>
         </form>

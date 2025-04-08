@@ -18,42 +18,7 @@
             margin: 0;
             padding: 0;
             background-color: #f9f9f9;
-        }
-
-        /* Other styles remain the same */
-        .tutorial {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            background-color: rgb(248, 70, 70);
-            padding: 20px;
-        }
-
-        .step {
-            background-color: white;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            width: 40rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .step img {
-            width: 500px;
-            height: 350px;
-            margin-bottom: 15px;
-        }
-
-        .step h2 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: rgb(255, 189, 67);
-        }
-
-        .step p {
-            font-size: 1.5rem;
-            color: #636e72;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
         header {
@@ -64,14 +29,14 @@
         }
 
         header h1 {
-            font-size: 5rem;
-            margin-bottom: 10px;
+            font-size: 4rem;
+            margin-bottom: 15px;
         }
 
         header p {
             font-size: 1.5rem;
+            max-width: 700px;
             margin: 0 auto;
-            max-width: 600px;
         }
 
         .cta-buttons {
@@ -83,7 +48,7 @@
             text-decoration: none;
             padding: 12px 30px;
             margin: 10px;
-            font-size: 30px;
+            font-size: 1.2rem;
             border-radius: 30px;
             background-color: white;
             color: rgb(248, 70, 70);
@@ -102,14 +67,14 @@
         }
 
         section h2 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
             color: #2d3436;
         }
 
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
@@ -120,7 +85,7 @@
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: left;
+            text-align: center;
             transition: transform 0.3s;
         }
 
@@ -130,13 +95,13 @@
         }
 
         .feature h2 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             margin: 15px 0 10px;
             color: rgb(248, 70, 70);
         }
 
         .feature p {
-            font-size: 1.5rem;
+            font-size: 1rem;
             color: #636e72;
         }
 
@@ -144,10 +109,43 @@
             transform: translateY(-10px);
         }
 
+        .tutorial {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            background-color: rgb(248, 70, 70);
+        }
+
+        .step {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .step img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .step h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: rgb(255, 189, 67);
+        }
+
+        .step p {
+            font-size: 1rem;
+            color: #636e72;
+        }
+
         footer {
             background-color: #2d3436;
             color: #dfe6e9;
-            padding: 20px 0;
+            padding: 15px 0;
             text-align: center;
             font-size: 0.875rem;
         }
@@ -159,6 +157,73 @@
 
         footer a:hover {
             text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 30px 10px;
+            }
+
+            header h1 {
+                font-size: 2.5rem;
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+
+            .cta-buttons a {
+                font-size: 1rem;
+                padding: 8px 15px;
+            }
+
+            section h2 {
+                font-size: 2rem;
+            }
+
+            .features,
+            .tutorial {
+                gap: 15px;
+            }
+
+            .feature h2,
+            .step h2 {
+                font-size: 1.25rem;
+            }
+
+            .feature p,
+            .step p {
+                font-size: 0.875rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 20px 10px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header p {
+                font-size: 0.9rem;
+            }
+
+            .cta-buttons a {
+                font-size: 0.9rem;
+                padding: 5px 10px;
+            }
+
+            .features,
+            .tutorial {
+                grid-template-columns: 1fr;
+            }
+
+            .step img {
+                max-height: 150px;
+            }
         }
     </style>
 </head>

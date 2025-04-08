@@ -9,6 +9,10 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\AllergenController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PasswordController;
+
 
 // Landing page
 Route::get('/', [LandingPageController::class, 'index'])->name('landing');
@@ -20,6 +24,23 @@ Route::post('/login', [AuthController::class, 'processLogin']);
 // Signup
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup');
 Route::post('/signup', [AuthController::class, 'processSignup']);
+
+Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
+    ->middleware('guest')
+    ->name('password.request');
+
+Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+    ->middleware('guest')
+    ->name('password.email');
+    
+Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
+    ->middleware('guest')
+    ->name('password.reset');
+
+Route::put('/reset-password', [PasswordController::class, 'update'])
+    ->middleware('guest')
+    ->name('password.update');
+
 
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -72,14 +93,12 @@ Route::middleware(['auth'])->group(function () {
         return response()->json($fruits->merge($vegetables));
     });
     
-
+    Route::post('/add-allergen', [UploadController::class, 'addAllergen'])->name('add.allergen');
+    
     // Image upload
     Route::get('/upload-image', [UploadController::class, 'showUploadForm'])->name('upload.image.form');
     Route::post('/upload-image', [UploadController::class, 'uploadImage'])->name('upload.image');
 });
-
-// Feedback submission (accessible to all authenticated users)
-Route::post('/feedback/submit', [FeedbackController::class, 'submitFeedback'])->name('user.feedback.submit');
 
 // History
 Route::get('/history', [HistoryController::class, 'index'])->name('history.index');

@@ -29,7 +29,7 @@
                         type="text" 
                         id="allergen_name" 
                         name="allergen_name" 
-                        placeholder="Enter an allergen (e.g., Peanuts)" 
+                        placeholder="Enter an allergen food(e.g., Peanuts)" 
                         class="rounded-lg px-4 py-2 border border-gray-600 bg-gray-700 text-black placeholder-gray-400 focus:ring-2 focus:ring-green-400 focus:outline-none w-full" 
                         autocomplete="off"
                         onkeyup="fetchAllergens()"

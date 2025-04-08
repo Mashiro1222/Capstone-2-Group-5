@@ -1,0 +1,8 @@
+2025-02-06 03:06:23,814 - INFO - Script started with input_image: C:/path/to/input.jpg, output_image: C:/path/to/output.jpg
+2025-02-06 03:06:23,814 - ERROR - The image path C:/path/to/input.jpg does not exist.
+2025-02-06 03:07:37,924 - INFO - Script started with input_image: C:/path/to/Ckh4ZR2GVXlsRa6RcKhdDejUlzjzjO3fV11PtuOIp.jpg, output_image: C:/path/to/kh4ZR2GVXlsRa6RcKhdDejUlzjzjO3fV11PtuOIp.jpg
+2025-02-06 03:07:37,925 - ERROR - The image path C:/path/to/Ckh4ZR2GVXlsRa6RcKhdDejUlzjzjO3fV11PtuOIp.jpg does not exist.
+2025-02-06 03:07:57,002 - INFO - Script started with input_image: C:/path/to/Ckh4ZR2GVXlsRa6RcKhdDejUlzjzjO3fV11PtuOIp.jpg, output_image: C:/path/to/output.jpg
+2025-02-06 03:07:57,002 - ERROR - The image path C:/path/to/Ckh4ZR2GVXlsRa6RcKhdDejUlzjzjO3fV11PtuOIp.jpg does not exist.
+2025-02-06 03:08:57,522 - INFO - Script started with input_image: C:/Users/Tep Ocampo/Capstone-2-Group-5/public/storage/images/Ckh4ZR2GVXlsRa6RcKhdDejUlzjzjO3fV11PtuOIp.jpg, output_image: C:/path/to/output.jpg
+2025-02-06 03:08:57,522 - ERROR - The image path C:/Users/Tep Ocampo/Capstone-2-Group-5/public/storage/images/Ckh4ZR2GVXlsRa6RcKhdDejUlzjzjO3fV11PtuOIp.jpg does not exist.

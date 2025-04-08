@@ -103,8 +103,9 @@
         }
 
         .navbar .dropdown-btn {
+            font-family: 'Made Outer Sans', Arial, sans-serif;
             background: none;
-            color: #fff;
+            color: #bebebe;
             border: none;
             font-size: 16px;
             cursor: pointer;
@@ -114,6 +115,25 @@
             white-space: nowrap; /* Prevent wrapping */
             overflow: hidden; /* Hide overflowing text */
             text-overflow: ellipsis; /* Add ellipsis for overflow */
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Spacing between text and icon */
+        }
+        
+        .navbar .dropdown-btn::after {
+            content: "▼"; /* Unicode Downward Arrow */
+            font-size: 12px;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        /* Rotate icon when dropdown is open */
+        .navbar .dropdown-btn.active::after {
+            transform: rotate(180deg);
+        }
+        
+                /* Minimal hover effect */
+        .navbar .dropdown-btn:hover {
+            color: #e0e0e0; /* Slightly brighter hover color */
         }
 
         .navbar .dropdown-content {
@@ -148,47 +168,52 @@
     </style>
 </head>
 <body>
+    <!-- Navbar -->
     <div class="navbar">
         <div class="title">
-            <a href="<?php echo url('/dashboard'); ?>" style="color: #fff; text-decoration: none;">Allercheck</a>
+            <a href="{{ url('/dashboard') }}" style="color: #fff; text-decoration: none;">AllerCheck</a>
         </div>
         <div class="dropdown">
-            <button class="dropdown-btn"><?php echo Auth::user()->name ?? 'Guest'; ?></button>
+            <button class="dropdown-btn">{{ Auth::user()->name ?? 'Guest' }}</button>
             <div class="dropdown-content">
-                <a href="<?php echo url('/profile'); ?>">Edit Profile</a>
-                <a href="<?php echo url('/history'); ?>">History</a>
-                <form method="POST" action="<?php echo route('logout'); ?>" style="display: inline;">
-                    <?php echo csrf_field(); ?>
-                    <button type="submit" style="background: none; border: none; color: #333; padding: 10px 20px; cursor: pointer;">
+                <a href="{{ url('/profile') }}">Profile</a>
+                <a href="{{ url('/dashboard') }}">Dashboard</a>
+                <a href="{{ url('/history') }}">History</a>
+                <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                    @csrf
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+                        style="display: block; text-decoration: none; color: #333; padding: 10px 20px;">
                         Logout
-                    </button>
+                    </a>
                 </form>
             </div>
         </div>
     </div>
 
-
     <!-- Back Button -->
     <a href="javascript:history.back()" class="back-button">⬅ Back to History</a>
 
+    <!-- Container -->
     <div class="container">
         <h1>Record Details:</h1>
-        <p><strong>ID:</strong> <?php echo $record['id']; ?></p>
-        <p><strong>User ID:</strong> <?php echo $record['user_id']; ?></p>
-        <p><strong>Item Name:</strong> <?php echo $record['item_name']; ?></p>
-        <p><strong>Scientific Name:</strong> <?php echo $record['scientific_name']; ?></p>
-        <p><strong>Description:</strong> <?php echo $record['description']; ?></p> 
-        <p><strong>Possible Allergen:</strong> <?php echo $record['possible_allergen']; ?></p>
-        <p><strong>Symptoms:</strong> <?php echo $record['symptoms']; ?></p>
-        <p><strong>Essential Information:</strong> <?php echo $record['essential_information']; ?></p>
-        <p><strong>Created At:</strong> <?php echo $record['created_at']; ?></p>
+        <p><strong>ID:</strong> {{ $record['id'] }}</p>
+        <p><strong>User ID:</strong> {{ $record['user_id'] }}</p>
+        <p><strong>Item Name:</strong> {{ $record['item_name'] }}</p>
+        <p><strong>Scientific Name:</strong> {{ $record['scientific_name'] }}</p>
+        <p><strong>Description:</strong> {{ $record['description'] }}</p>
+        <p><strong>Possible Allergen:</strong> {{ $record['possible_allergen'] }}</p>
+        <p><strong>Symptoms:</strong> {{ $record['symptoms'] }}</p>
+        <p><strong>Essential Information:</strong> {{ $record['essential_information'] }}</p>
+        <p><strong>Created At:</strong> {{ $record['created_at'] }}</p>
 
         <h2>Detected Image:</h2>
-        <?php if (!empty($record['image_path'])): ?>
-            <img src="<?php echo '/' . $record['image_path']; ?>" alt="Detected Image">
-        <?php else: ?>
+        @if (!empty($record['image_path']))
+            <img src="{{ Storage::exists($record['image_path']) ? Storage::url($record['image_path']) : asset($record['image_path']) }}" 
+                 alt="Detected Image" 
+                 style="max-width: 300px; border: 1px solid #ddd; border-radius: 8px;">
+        @else
             <p>No Image Available</p>
-        <?php endif; ?>
+        @endif
     </div>
 </body>
 </html>

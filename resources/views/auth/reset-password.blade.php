@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <style>
+    <title>Reset Password</title>
+     <style>
         @font-face {
             font-family: 'Made Outer Sans';
             src: url('{{ asset('fonts/MADEOuterSans-Regular.otf') }}') format('opentype');
@@ -13,7 +12,6 @@
             font-style: normal;
         }
         body {
-
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,15 +24,55 @@
             color: #fff; /* Adjust text color for readability */
         }
 
-        .container {
+       .container {
             display: flex;
-            width: 70%; /* Adjusted for responsiveness */
+            flex-direction: column;
+            align-items: center;
+            width: 500px;
+            padding: 10px;
             border-radius: 12px;
-            overflow: hidden;
+            background-color: #27ae60;
+            text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            background: #fff;
         }
 
+        .container form input {
+            text-align: left;
+            width: 90%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .container form button {
+            width: 90%;
+            margin-bottom: 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            background-color: #fff;
+            color: #27ae60;
+            border: none;
+            cursor: pointer;
+            padding: 12px;
+        }
+
+        .container form button:hover {
+            background-color: #f0f4f7;
+        }
+
+        .container a {
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container a:hover {
+            text-decoration: underline;
+        }
         .branding-section {
             flex: 1;
             background-color: #27ae60;
@@ -47,13 +85,17 @@
         }
 
         .branding-section h1 {
-            font-size: 60px; /* Larger font size */
-            margin-bottom: 20px;
+            font-size: 50px; /* Larger font size */
+            margin-bottom: 15px;
+            word-wrap: break-word;
         }
 
         .branding-section p {
-            font-size: 18px; /* Larger font size */
-            margin-bottom: 20px;
+            font-size: 20px; /* Larger font size */
+            margin-bottom: 15px;
+            max-width: 80%;
+            text-align: center;
+            padding: 50px;
         }
 
         .branding-section button {
@@ -72,7 +114,7 @@
 
         .form-section {
             flex: 1;
-            padding: 60px; /* Increased padding for better spacing */
+            padding: 200px; /* Increased padding for better spacing */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -87,7 +129,7 @@
         .form-section input {
             margin-bottom: 20px;
             padding: 15px; /* Increased input size */
-            font-size: 16px; /* Larger font size */
+            font-size: 40px; /* Larger font size */
             border: 1px solid #ddd;
             border-radius: 8px;
             width: 100%;
@@ -166,48 +208,43 @@
             .form-section a {
                 font-size: 0.9rem;
             }
-        }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
-<div class="container">
-    <div class="branding-section">
-        <h1>Welcome to AllerCheck!</h1>
-        <p>
-            AllerCheck is your reliable companion for direct allergen identification, understanding cross-reactivity, and gaining essential insights into the foods you consume. Designed with simplicity and accuracy in mind, AllerCheck empowers you to make safe and informed choices effortlessly.
-        </p>
-    </div>
-    
-    <div class="form-section">
-        <h1>Login</h1>
+    <div class="container">
+        <h2>Reset Your Password</h2>
+        <p>Enter a new password for your account.</p>
 
-        <!-- Display Login Error Message -->
-        @if ($errors->has('login'))
-            <div class="bg-red-500 text-white p-2 rounded mb-4">
-                {{ $errors->first('login') }}
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}">
+        <form action="{{ route('password.update.save') }}" method="POST">
             @csrf
-            <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required><br>
-            @error('email') <span style="color: red;">{{ $message }}</span><br> @enderror
-
-            <input type="password" name="password" placeholder="Password" required><br>
-            @error('password') <span style="color: red;">{{ $message }}</span><br> @enderror
-
-            <button type="submit">Login</button>
-        </form>
+            @method('PUT')
+            
+            <input type="hidden" name="token" value="{{ request()->route('token') }}">
         
-        <!-- Signup and Forgot Password Links -->
-        <p class="links">
-            <a href="{{ route('signup') }}">Create New Account</a>
-            <a href="{{ route('password.request') }}">Forgot Password?</a>
-        </p>
-    </div>
-    
-    <div class="image-section"></div>
-</div>
-</body>
+            <label for="email">Email Address</label>
+            <input type="email" name="email" required>
+        
+            <label for="password">New Password</label>
+            <input type="password" name="password" required>
+        
+            <label for="password_confirmation">Confirm New Password</label>
+            <input type="password" name="password_confirmation" required>
+        
+            <button type="submit">Reset Password</button>
+        </form>
 
+        <a href="{{ route('login') }}">Back to Login</a>
+    </div>
+</body>
 </html>
